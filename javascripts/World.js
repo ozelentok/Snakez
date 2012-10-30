@@ -1,16 +1,14 @@
 var SN = {};
-/*
- * Constructs a new Game
- */
+
 SN.World = function (canvas) {
 	this.ctx = canvas.getContext('2d');
-}
+};
 
 SN.World.prototype.start = function () {
 	this.initWorld();
 	this.attachEvents();
 	this.initGame();
-}
+};
 
 SN.World.prototype.initWorld = function () {
 	this.ctx.canvas.width = SN.Const.width;
@@ -22,11 +20,11 @@ SN.World.prototype.attachEvents = function() {
 	$(document).keypress(function (e) {
 		self.onKeyPress(e);
 	});
-}
+};
 
 SN.World.prototype.onKeyPress = function (e) {
 	this.snake.direction = e.keyCode;
-}
+};
 
 SN.World.prototype.initGame = function () {
 	var xPos = Math.round(SN.Sizes.maxBlockPosX / 2);
@@ -64,14 +62,16 @@ SN.World.prototype.advance = function () {
 		self.drawBlocks();
 	}, SN.Const.MSPF);
 
-}
+};
+
 SN.World.prototype.endGame = function () {
 	clearInterval(this.clock);
 	var playAgain = confirm('You Lost!\nPlay Again?');
 	if(playAgain) {
 		this.initGame();
 	}
-}
+};
+
 SN.World.prototype.drawBlock = function (x, y, blockType) {
 	var drawX = SN.Sizes.block * x;
 	var drawY = SN.Sizes.block * y;
@@ -83,7 +83,8 @@ SN.World.prototype.drawBlock = function (x, y, blockType) {
 	}
 	this.ctx.fillRect(drawX, drawY, SN.Sizes.block, SN.Sizes.block);
 	this.ctx.strokeRect(drawX, drawY, SN.Sizes.block, SN.Sizes.block);
-}
+};
+
 SN.World.prototype.drawBlocks = function () {
 	this.ctx.clearRect(0, 0, SN.Const.width, SN.Const.height);
 	for (var i = 0; i <= SN.Sizes.maxBlockPosX; i += 1) {
@@ -98,6 +99,7 @@ SN.World.prototype.drawBlocks = function () {
 SN.World.prototype.markBlock = function(x, y, state) {
 	this.grid[x][y] = state;
 }
+
 SN.World.prototype.generateFood = function () {
 	var xPos;
 	var yPos;
@@ -156,27 +158,32 @@ SN.Snake.prototype.move = function () {
 	this.body.unshift(nextBlock);
 	return nextBlock;
 };
+
 SN.Block = function (x, y) {
 	this.x = x;
 	this.y = y;
 };
+
 SN.BlockState = {
 	empty: 0,
 	snake: 1,
 	food: 2,
 };
+
 SN.Directions = {
 	up: 38,
 	right: 39,
 	down: 40,
 	left: 37,
 };
+
 SN.Const = {
 	MSPF: 200,
 };
+
 SN.Sizes = {};
 
-SN.Const.width = $(window).width() ;
+SN.Const.width = $(window).width();
 SN.Sizes.block = SN.Const.width / 20;
 
 SN.Const.height = Math.floor($(window).height() - $(window).height() % SN.Sizes.block);
@@ -187,7 +194,6 @@ SN.Colors = {
 	snake: 'green',
 	food: 'blue',
 };
-
 
 $(document).ready( function () {
   world = new SN.World($('#gameview')[0]);
