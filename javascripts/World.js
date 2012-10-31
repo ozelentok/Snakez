@@ -23,7 +23,13 @@ SN.World.prototype.attachEvents = function() {
 };
 
 SN.World.prototype.onKeyPress = function (e) {
-	this.snake.direction = e.keyCode;
+	if(this.snake.direction == SN.Directions.up && e.keyCode != SN.Directions.down ||
+		this.snake.direction == SN.Directions.right && e.keyCode != SN.Directions.left ||
+		this.snake.direction == SN.Directions.down && e.keyCode != SN.Directions.up ||
+		this.snake.direction == SN.Directions.left && e.keyCode != SN.Directions.right) {
+
+		this.snake.direction = e.keyCode;
+	}
 };
 
 SN.World.prototype.initGame = function () {
