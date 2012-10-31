@@ -48,7 +48,7 @@ SN.World.prototype.initGame = function () {
 		}
 		this.grid.push(row);
 	}
-	console.log(xPos);
+	this.points = 0;
 	this.grid[xPos][yPos] = SN.BlockState.snake;
 	this.generateFood();
 	this.drawBlocks();
@@ -73,7 +73,7 @@ SN.World.prototype.advance = function () {
 
 SN.World.prototype.endGame = function () {
 	clearInterval(this.clock);
-	var playAgain = confirm('You Lost!\nPlay Again?');
+	var playAgain = confirm('You Scored ' + this.points + ' Points!\nPlay Again?');
 	if(playAgain) {
 		this.initGame();
 	}
@@ -123,8 +123,10 @@ SN.World.prototype.checkEating = function () {
 		var emptiedBlock = this.snake.body.pop();
 		this.markBlock(emptiedBlock.x, emptiedBlock.y, SN.BlockState.empty);
 	}
+	// has ate
 	else {
 		this.generateFood();
+		this.points += SN.Sizes.point;
 	}
 }
 
@@ -186,6 +188,7 @@ SN.Directions = {
 };
 
 SN.Sizes = {
+	point: 5,
 	MSPF: 200,
 };
 
@@ -193,8 +196,6 @@ SN.Sizes = {
 (function () {
 	var width = $(window).width();
 	var height = $(window).height();
-	console.log(width);
-	console.log(height);
 	if (width >= height) {
 		SN.Sizes.width = width;
 		SN.Sizes.block = width / 20;
