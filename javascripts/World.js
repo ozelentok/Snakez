@@ -33,12 +33,12 @@ SN.World.prototype.onKeyPress = function (e) {
 };
 
 SN.World.prototype.initGame = function () {
-	var xPos = Math.round(SN.Sizes.maxBlockPosX / 2);
-	var yPos = Math.round(SN.Sizes.maxBlockPosY / 2);
+	var xPos = Math.floor(SN.Sizes.maxBlockPosX / 2);
+	var yPos = Math.floor(SN.Sizes.maxBlockPosY / 2);
 	this.snake = new SN.Snake({
 		x: xPos,
 		y: yPos,
-		direction: SN.Directions.up,
+		direction: SN.Directions.start,
 	});
 	this.grid = [];
 	for (var i = 0; i <= SN.Sizes.maxBlockPosX; i += 1) {
@@ -189,7 +189,7 @@ SN.Directions = {
 
 SN.Sizes = {
 	point: 5,
-	MSPF: 200,
+	MSPF: 220,
 };
 
 
@@ -200,11 +200,13 @@ SN.Sizes = {
 		SN.Sizes.width = width;
 		SN.Sizes.block = width / 20;
 		SN.Sizes.height = Math.floor(height - height % SN.Sizes.block);
+		SN.Directions.start = SN.Directions.right;
 	}
 	else {
 		SN.Sizes.height = height;
 		SN.Sizes.block = height / 20;
 		SN.Sizes.width = Math.floor(width - width % SN.Sizes.block);
+		SN.Directions.start = SN.Directions.up;
 	}
 	SN.Sizes.maxBlockPosX = Math.round(SN.Sizes.width / SN.Sizes.block) - 1;
 	SN.Sizes.maxBlockPosY = Math.round(SN.Sizes.height / SN.Sizes.block) - 1;
