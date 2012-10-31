@@ -18,19 +18,18 @@ SN.World.prototype.initWorld = function () {
 SN.World.prototype.attachEvents = function() {
 	var self = this;
 	$(document).keydown(function (e) {
-		self.onKeyPress(e);
+		e.preventDefault();
+		self.changeDirection(e.keyCode);
+	});
+	$(document).bind('touchstart', function (e) {
+		e.preventDefault();
+		self.setTouchStartDirection(e);
+	});
+	$(document).bind('touchmove', function (e) {
+		self.changeDirectionByTouch(e);
 	});
 };
 
-SN.World.prototype.onKeyPress = function (e) {
-	if(this.snake.direction == SN.Directions.up && e.keyCode != SN.Directions.down ||
-		this.snake.direction == SN.Directions.right && e.keyCode != SN.Directions.left ||
-		this.snake.direction == SN.Directions.down && e.keyCode != SN.Directions.up ||
-		this.snake.direction == SN.Directions.left && e.keyCode != SN.Directions.right) {
-
-		this.snake.direction = e.keyCode;
-	}
-};
 
 SN.World.prototype.initGame = function () {
 	var xPos = Math.floor(SN.Sizes.maxBlockPosX / 2);
@@ -79,6 +78,44 @@ SN.World.prototype.endGame = function () {
 	}
 };
 
+SN.World.prototype.changeDirection = function (direction) {
+	if(((this.snake.direction == SN.Directions.up && direction != SN.Directions.down) ||
+		(this.snake.direction == SN.Directions.right && direction != SN.Directions.left) ||
+		(this.snake.direction == SN.Directions.down && direction != SN.Directions.up) ||
+		(this.snake.direction == SN.Directions.left && direction != SN.Directions.right)) &&
+		(direction >= SN.Directions.left && direction <= SN.Directions.down)) {
+		this.snake.direction = direction;
+	}
+};
+
+SN.World.prototype.setTouchStartDirection = function (e) {
+	var touchStart = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+	this.touchStartX = touchStart.pageX - this.ctx.canvas.offsetLeft;
+	this.touchStartY = touchStart.pageY;
+}
+SN.World.prototype.changeDirectionByTouch = function (e) {
+	var touchEnd = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+	var endX = touchEnd.pageX - this.ctx.canvas.offsetLeft
+	var endY = touchEnd.pageY;
+	var xDiff = endX - this.touchStartX;
+	var yDiff = endY - this.touchStartY;
+	if (Math.abs(xDiff) >= Math.abs(yDiff)) {
+		if(xDiff > 0) {
+			this.changeDirection(SN.Directions.right);
+		}
+		else {
+			this.changeDirection(SN.Directions.left);
+		}
+	}
+	else {
+		if(yDiff > 0) {
+			this.changeDirection(SN.Directions.down);
+		}
+		else {
+			this.changeDirection(SN.Directions.up);
+		}
+	}
+}
 SN.World.prototype.drawBlock = function (x, y, blockType) {
 	var drawX = SN.Sizes.block * x;
 	var drawY = SN.Sizes.block * y;

@@ -5,4 +5,4 @@ Hosted on:
 
 ###Movment:
 * Arrow keys (keyboard)
-* (todo) Sliding on screen (touch screen)
+* Sliding on screen (touch screen)
