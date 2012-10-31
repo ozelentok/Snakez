@@ -17,7 +17,7 @@ SN.World.prototype.initWorld = function () {
 
 SN.World.prototype.attachEvents = function() {
 	var self = this;
-	$(document).keypress(function (e) {
+	$(document).keydown(function (e) {
 		self.onKeyPress(e);
 	});
 };
