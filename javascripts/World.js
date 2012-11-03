@@ -19,14 +19,15 @@ SN.World.prototype.attachEvents = function() {
 	var self = this;
 	$(document).keydown(function (e) {
 		e.preventDefault();
-		self.changeDirection(e.keyCode);
+		self.updateDirectionBuffer(e.keyCode);
 	});
 	$(document).bind('touchstart', function (e) {
 		e.preventDefault();
 		self.setTouchStartDirection(e);
 	});
 	$(document).bind('touchmove', function (e) {
-		self.changeDirectionByTouch(e);
+		e.preventDefault();
+		self.updateDirectionBufferByTouch(e);
 	});
 };
 
@@ -47,6 +48,8 @@ SN.World.prototype.initGame = function () {
 		}
 		this.grid.push(row);
 	}
+	this.lastTime = Date.now();
+	this.directionBuffer = SN.Directions.start;
 	this.points = 0;
 	this.grid[xPos][yPos] = SN.BlockState.snake;
 	this.generateFood();
@@ -57,6 +60,7 @@ SN.World.prototype.initGame = function () {
 SN.World.prototype.advance = function () {
 	var self = this;
 	this.clock = setInterval(function () {
+		self.changeDirection();
 		var headBlock = self.snake.move();
 		if (self.isSnakeDead()) {	
 			self.endGame();
@@ -78,13 +82,13 @@ SN.World.prototype.endGame = function () {
 	}
 };
 
-SN.World.prototype.changeDirection = function (direction) {
+SN.World.prototype.updateDirectionBuffer = function (direction) {
 	if(((this.snake.direction == SN.Directions.up && direction != SN.Directions.down) ||
 		(this.snake.direction == SN.Directions.right && direction != SN.Directions.left) ||
 		(this.snake.direction == SN.Directions.down && direction != SN.Directions.up) ||
 		(this.snake.direction == SN.Directions.left && direction != SN.Directions.right)) &&
 		(direction >= SN.Directions.left && direction <= SN.Directions.down)) {
-		this.snake.direction = direction;
+		this.directionBuffer = direction;
 	}
 };
 
@@ -93,7 +97,7 @@ SN.World.prototype.setTouchStartDirection = function (e) {
 	this.touchStartX = touchStart.pageX - this.ctx.canvas.offsetLeft;
 	this.touchStartY = touchStart.pageY;
 }
-SN.World.prototype.changeDirectionByTouch = function (e) {
+SN.World.prototype.updateDirectionBufferByTouch = function (e) {
 	var touchEnd = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
 	var endX = touchEnd.pageX - this.ctx.canvas.offsetLeft
 	var endY = touchEnd.pageY;
@@ -101,20 +105,23 @@ SN.World.prototype.changeDirectionByTouch = function (e) {
 	var yDiff = endY - this.touchStartY;
 	if (Math.abs(xDiff) >= Math.abs(yDiff)) {
 		if(xDiff > 0) {
-			this.changeDirection(SN.Directions.right);
+			this.directionBuffer = SN.Directions.right;
 		}
 		else {
-			this.changeDirection(SN.Directions.left);
+			this.directionBuffer = SN.Directions.left;
 		}
 	}
 	else {
 		if(yDiff > 0) {
-			this.changeDirection(SN.Directions.down);
+			this.directionBuffer = SN.Directions.down;
 		}
 		else {
-			this.changeDirection(SN.Directions.up);
+			this.directionBuffer = SN.Directions.up;
 		}
 	}
+}
+SN.World.prototype.changeDirection = function() {
+	this.snake.direction = this.directionBuffer;
 }
 SN.World.prototype.drawBlock = function (x, y, blockType) {
 	var drawX = SN.Sizes.block * x;
@@ -226,7 +233,7 @@ SN.Directions = {
 
 SN.Sizes = {
 	point: 5,
-	MSPF: 220,
+	MSPF: 250,
 };
 
 
