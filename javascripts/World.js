@@ -105,18 +105,18 @@ SN.World.prototype.updateDirectionBufferByTouch = function (e) {
 	var yDiff = endY - this.touchStartY;
 	if (Math.abs(xDiff) >= Math.abs(yDiff)) {
 		if(xDiff > 0) {
-			this.directionBuffer = SN.Directions.right;
+			this.updateDirectionBuffer(SN.Directions.right);
 		}
 		else {
-			this.directionBuffer = SN.Directions.left;
+			this.updateDirectionBuffer(SN.Directions.left);
 		}
 	}
 	else {
 		if(yDiff > 0) {
-			this.directionBuffer = SN.Directions.down;
+			this.updateDirectionBuffer(SN.Directions.down);
 		}
 		else {
-			this.directionBuffer = SN.Directions.up;
+			this.updateDirectionBuffer(SN.Directions.up);
 		}
 	}
 }
