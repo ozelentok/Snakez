@@ -1,6 +1,6 @@
 #Snake in HTML5 and Javascript <br />
 Hosted on:
-<a href="http://ozelentok.net76.net/snake">http://ozelentok.net76.net/snake</a>
+<a href="http://oz.elentok.com/snake">http://oz.elentok.com/snake</a>
 ##Instructions
 
 ###Movment:
