@@ -48,7 +48,6 @@ SN.World.prototype.initGame = function () {
 		}
 		this.grid.push(row);
 	}
-	this.lastTime = Date.now();
 	this.directionBuffer = SN.Directions.start;
 	this.points = 0;
 	this.grid[xPos][yPos] = SN.BlockState.snake;
@@ -126,17 +125,16 @@ SN.World.prototype.changeDirection = function() {
 SN.World.prototype.drawBlock = function (x, y, blockType) {
 	var drawX = SN.Sizes.block * x;
 	var drawY = SN.Sizes.block * y;
-	if (blockType == SN.BlockState.empty) {
-		this.ctx.fillStyle = SN.Colors.empty;
-	}
-	else if (blockType == SN.BlockState.snake) {
+	if (blockType == SN.BlockState.snake) {
 		this.ctx.fillStyle = SN.Colors.snake;
+		this.ctx.fillRect(drawX, drawY, SN.Sizes.block, SN.Sizes.block);
+		this.ctx.strokeRect(drawX, drawY, SN.Sizes.block, SN.Sizes.block);
 	}
-	else { 
+	else if(blockType == SN.BlockState.food) { 
 		this.ctx.fillStyle = SN.Colors.food;
+		this.ctx.fillRect(drawX, drawY, SN.Sizes.block, SN.Sizes.block);
+		this.ctx.strokeRect(drawX, drawY, SN.Sizes.block, SN.Sizes.block);
 	}
-	this.ctx.fillRect(drawX, drawY, SN.Sizes.block, SN.Sizes.block);
-	this.ctx.strokeRect(drawX, drawY, SN.Sizes.block, SN.Sizes.block);
 };
 
 SN.World.prototype.drawBlocks = function () {
@@ -232,8 +230,9 @@ SN.Directions = {
 };
 
 SN.Sizes = {
+	blockCount: 40,
 	point: 5,
-	MSPF: 250,
+	MSPF: 100
 };
 
 
@@ -242,13 +241,13 @@ SN.Sizes = {
 	var height = $(window).height();
 	if (width >= height) {
 		SN.Sizes.width = width;
-		SN.Sizes.block = width / 20;
+		SN.Sizes.block = width / SN.Sizes.blockCount;
 		SN.Sizes.height = Math.floor(height - height % SN.Sizes.block);
 		SN.Directions.start = SN.Directions.right;
 	}
 	else {
 		SN.Sizes.height = height;
-		SN.Sizes.block = height / 20;
+		SN.Sizes.block = height / SN.Sizes.blockCount;
 		SN.Sizes.width = Math.floor(width - width % SN.Sizes.block);
 		SN.Directions.start = SN.Directions.up;
 	}
@@ -259,7 +258,7 @@ SN.Sizes = {
 
 SN.Colors = {
 	empty: '#181818',
-	snake: 'green',
+	snake: '#0d0',
 	food: '#0af',
 };
 
